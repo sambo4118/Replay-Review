@@ -13,13 +13,27 @@
 		</div>
 		<div class="overlay-layer">
 			<div class="ui-buttons">
-				<button id="open-replay">Open Replay</button>		
+				<label for="replay-file" id="open-replay">Open Replay</label>		
 				<input id="replay-file" type="file" accept=".osr" style="display:none"/>
 				<button id="play-pause">Play</button>
 			</div>
 		</div>
 	</div>
 	
+	<div id="boot-box" style="position:fixed;top:0;right:0;background:#111;color:#9f9;padding:6px 8px;z-index:10000;font-family:monospace;font-size:12px;">boot hook ready</div>
+	<div id="error-box" style="display:none;position:fixed;top:0;left:0;right:0;background:red;color:white;padding:10px;z-index:9999;font-family:monospace;white-space:pre-wrap;"></div>
+	<script>
+		window.addEventListener("error", function(e) {
+			var box = document.getElementById("error-box");
+			box.style.display = "block";
+			box.textContent = e.message + " (" + e.filename + ":" + e.lineno + ")";
+		});
+		window.addEventListener("unhandledrejection", function(e) {
+			var box = document.getElementById("error-box");
+			box.style.display = "block";
+			box.textContent = "Unhandled promise: " + e.reason;
+		});
+	</script>
 
 	<script src="/vendor/lzma-js/src/lzma.js"></script>
 	<script src="/vendor/regl/dist/regl.min.js"></script>

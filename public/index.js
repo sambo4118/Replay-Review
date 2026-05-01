@@ -1,6 +1,5 @@
-import { readOsr, decodeKeys } from "./parser.js";
 const canvas = document.getElementById("canvas");
-const regl = REGL({canvas: canvas});
+const regl = createREGL({canvas: canvas});
 
 const playfieldLayout = {
     offsetX: 0,
@@ -108,14 +107,58 @@ openReplayButton.addEventListener("click", () => {
     replayFileInput.click();
 });
 
+const playbackState = {
+    frames: [],
+    currentFrameIndex: 0,
+    isPlaying: false,
+    lastTimestamp: null
+};
+
+function tick(timestamp) {
+    if (playbackState.isPlaying) {
+        if (playbackState.lastTimestamp !== null) {
+            playbackState.currentFrameIndex += timestamp - playbackState.lastTimestamp;
+        }
+        playbackState.lastTimestamp = timestamp;
+    }
+
+    const frame = getFrameAtTime(playbackState.frames, playbackState.currentFrameIndex);
+
+    if (frame) {
+        regl.clear({ color: [0, 0, 0, 1], depth: 1 });
+        renderReplayframe(frame);
+    }
+
+    requestAnimationFrame(tick);
+}
+
+function getFrameAtTime(frames, time) {
+    if (frames.length === 0) return null;
+    let lo = 0, hi = frames.length - 1;
+    while (lo < hi) {
+        const mid = (lo + hi + 1) >> 1;
+        if (frames[mid].time <= time) lo = mid;
+        else hi = mid - 1;
+    }
+    return frames[lo];
+}
+
 replayFileInput.addEventListener("change", async (event) => {
     const file = event.target.files?.[0];
     if (!file) return;
     const replay = await readOsr(file);
-
+    playbackState.frames = replay.parseReplayFrames();
+    playbackState.currentFrameIndex = 0;
+    playbackState.isPlaying = false;
 });
 
-playPauseButton.addEventListener("click", () => {});
+playPauseButton.addEventListener("click", () => {
+    playbackState.isPlaying = !playbackState.isPlaying;
+    playbackState.lastTimestamp = null;
+    playPauseButton.textContent = playbackState.isPlaying ? "Pause" : "Play";
+});
+
+requestAnimationFrame(tick);
 
 window.addEventListener("resize", resizeCanvas);
 resizeCanvas();
