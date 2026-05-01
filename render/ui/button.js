@@ -2,9 +2,12 @@ import { Container, Graphics, Text } from "pixi.js";
 
 export function createButton({ label, width = 160, height = 48, onClick, parent }) {
     const container = new Container();
+    container.layout = { width, height };
+
     const background = new Graphics()
         .roundRect(0, 0, width, height, 8)
         .fill(0xdc98a4);
+
 
     const text = new Text({ 
         text: label, 
@@ -17,6 +20,8 @@ export function createButton({ label, width = 160, height = 48, onClick, parent 
     container.eventMode = "static";
     container.cursor = "pointer";
     container.on("pointerdown", onClick);
+
+    container.label = { width, height }
 
     parent?.addChild(container);
 

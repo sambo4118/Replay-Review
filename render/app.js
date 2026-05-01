@@ -1,5 +1,7 @@
 import { Application } from 'pixi.js';
 import { createMenu } from './ui/menu.js';
+import { pickFile } from '../utils/pickFile.js';
+import { loadReplaySession } from '../playback/loader.js';
 import "@pixi/layout";
 
 export async function createApp() {
@@ -8,8 +10,10 @@ export async function createApp() {
     document.getElementById('app').appendChild(app.canvas);
 
     const menu = createMenu(app, {
-        onOpenReplay: () => {
-            document.getElementById('replay-file-input').click();
+        onOpenReplay:async () => {
+            const session = await loadReplaySession();
+            if (!session) return;
+            console.log(session);
         },
         onOpenSettings: () => {
             alert("Settings not implemented yet.");
@@ -23,8 +27,4 @@ export async function createApp() {
     app.stage.addChild(menu);
 
     return app;
-}
-
-function onOpenReplay() {
-    
 }

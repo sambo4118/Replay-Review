@@ -17,6 +17,7 @@ export function createMenu(app, callbacks) {
     const background = new Graphics()
         .rect(0, 0, menuContainer.layout.width, menuContainer.layout.height)
         .fill({ color: 0x1a1a1a, alpha: 0.9 });
+    background.layout = false;
     menuContainer.addChild(background);
     
     const buttons = {
