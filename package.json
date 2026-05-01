@@ -1,11 +1,17 @@
 {
   "name": "replay-review",
-  "version": "1.0.0",
-  "type": "commonjs",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
   "scripts": {
-    "start": "node server.js"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^8.0.10"
   },
   "dependencies": {
-    "express": "^5.2.1"
+    "pixi.js": "^8.18.1"
   }
 }
