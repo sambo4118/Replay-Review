@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Replay Review</title>
+	<link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+	<div class="page-root">
+		<div class="base-layer">
+			<canvas id="canvas"></canvas>
+		</div>
+		<div class="overlay-layer">
+			<div class="ui-buttons">
+				<button id="open-replay">Open Replay</button>		
+				<input id="replay-file" type="file" accept=".osr" style="display:none"/>
+				<button id="play-pause">Play</button>
+			</div>
+		</div>
+	</div>
+	
+
+	<script src="/vendor/lzma-js/src/lzma.js"></script>
+	<script src="/vendor/regl/dist/regl.min.js"></script>
+	<script src="./parser.js"></script>
+	<script src="./index.js"></script>
+</body>
+</html>
