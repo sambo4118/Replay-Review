@@ -68,7 +68,7 @@ export class ReplayParser {
             if (!part) continue;
 
             const [w, x, y, z] = part.split('|');
-            if (!keys) continue;
+            if (!z) continue;
             const DeltaTime = parseInt(w, 10);
 
             if (DeltaTime === -12345) continue; // ignore the seed at the end
@@ -78,7 +78,7 @@ export class ReplayParser {
                 t: time,
                 x: parseFloat(x),
                 y: parseFloat(y),
-                keys: keys.parseInt(z, 10)
+                keys: parseInt(z, 10)
             });
         }
         return frames;

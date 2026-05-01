@@ -13,8 +13,8 @@ export async function loadReplaySession() {
 
     let beatmap = null;
     try {
-        const { text } = await fetchBeatmapByHash(replay.mapHash);
-        beatmap = parseBeatmap(text);
+        const { osuText } = await fetchBeatmapByHash(replay.mapHash);
+        beatmap = parseBeatmap(osuText);
     } catch (err) {
         console.warn('Beatmap auto-fetch failed:', err);
     }

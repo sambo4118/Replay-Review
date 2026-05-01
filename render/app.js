@@ -2,6 +2,9 @@ import { Application } from 'pixi.js';
 import { createMenu } from './ui/menu.js';
 import { pickFile } from '../utils/pickFile.js';
 import { loadReplaySession } from '../playback/loader.js';
+import { createPlayfield } from './playfield.js';
+import { createEngine } from '../playback/engine.js';
+import { createCursor } from './cursor.js';
 import "@pixi/layout";
 
 export async function createApp() {
@@ -9,11 +12,22 @@ export async function createApp() {
     await app.init({ resizeTo: window, background: 0x000000 });
     document.getElementById('app').appendChild(app.canvas);
 
+    const playfield = createPlayfield(app);
+    app.stage.addChild(playfield.container);
+    
+    const cursor = createCursor();
+    playfield.cursorLayer.addChild(cursor.node);
+
+    const engine = createEngine(app);
+    engine.onUpdate(({ x, y }) => cursor.setPosition(x, y));
+    
     const menu = createMenu(app, {
-        onOpenReplay:async () => {
+        onOpenReplay: async () => {
             const session = await loadReplaySession();
             if (!session) return;
-            console.log(session);
+            playfield.show(session);
+            engine.load(session.replay);
+            engine.play();
         },
         onOpenSettings: () => {
             alert("Settings not implemented yet.");
@@ -25,6 +39,7 @@ export async function createApp() {
     menu.x = 20;
     menu.y = 20;
     app.stage.addChild(menu);
+
 
     return app;
 }
